@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.modal-title {
+  background-image: linear-gradient(to bottom, rgba(38, 38, 38, 1) 64%, rgba(38, 38, 38, 0) 100%);
+}
+
+.modal-actions {
+  background-image: linear-gradient(to top, rgba(38, 38, 38, 1) 64%, rgba(38, 38, 38, 0) 100%);
+}
+
+.oneMonth {
+  display: block!important;
+  margin: auto;
+}
+
+.chart svg>rect {
+  fill: transparent!important;
+}
+
+.chart svg g[column-id] text, .chart svg>g:first-of-type text {
+  fill: #fff!important;
+}
+
+.DayPicker-wrapper {
+  outline: none !important;
+}
+
+.DayPicker-Week, .DayPicker-WeekdaysRow {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.DayPicker-Day {
+  padding: 6px !important;
+  width: 36px !important;
+  display: block !important;
+}
+
+.DayPicker:not(.DayPicker--interactionDisabled) .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
+  background-color: #34D399 !important;
+  color: #ffffff !important;
+}
+
+.DayPicker-Month {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.DayPicker-Caption>div {
+  text-transform: capitalize !important;
+}
+
+.DayPicker-NavButton {
+  right: 0 !important;
+}
+
+.Selectable .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
+  background-color: #34D399 !important;
+}
+
+.Selectable .DayPicker-Day {
+  border-radius: 0 !important;
+}
+
+.Selectable .DayPicker-Day--start {
+  border-top-left-radius: 50% !important;
+  border-bottom-left-radius: 50% !important;
+}
+
+.Selectable .DayPicker-Day--end {
+  border-top-right-radius: 50% !important;
+  border-bottom-right-radius: 50% !important;
+}
+
+.DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+  background-color: #10B981 !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 398px) {
+  .DayPicker-Day {
+    padding: 4px !important;
+    width: 32px !important;
+  }
+}
+
+.SelectedWeekExample .DayPicker-Month {
+  border-collapse: separate;
+}
+
+.SelectedWeekExample .DayPicker-WeekNumber {
+  outline: none;
+}
+
+.SelectedWeekExample .DayPicker-Day {
+  outline: none;
+  border: 1px solid transparent;
+}
+
+.SelectedWeekExample .DayPicker-Day--hoverRange {
+  background-color: #10b98186 !important;
+}
+
+.SelectedWeekExample .DayPicker-Day--selectedRangeStart, .SelectedWeekExample .DayPicker-Day--hoverRangeStart {
+  border-top-left-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
+}
+
+.SelectedWeekExample .DayPicker-Day--selectedRangeEnd, .SelectedWeekExample .DayPicker-Day--hoverRangeEnd {
+  border-top-right-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+}
+
+.SelectedWeekExample .DayPicker-Day--selectedRange:not(.DayPicker-Day--outside).DayPicker-Day--selected, .SelectedWeekExample .DayPicker-Day--hoverRange:not(.DayPicker-Day--outside).DayPicker-Day--selected {
+
+  color: black !important;
+}
+
+.SelectedWeekExample .DayPicker-Day--hoverRange:hover {
+  border-radius: 0 !important;
+}
