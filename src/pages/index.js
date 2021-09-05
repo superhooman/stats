@@ -28,10 +28,10 @@ function getWeekDays(weekStart) {
 function getWeekRange(date) {
   return {
     from: moment(date)
-      .startOf('week')
+      .startOf('isoWeek')
       .toDate(),
     to: moment(date)
-      .endOf('week')
+      .endOf('isoWeek')
       .toDate(),
   };
 }
@@ -123,7 +123,7 @@ const Home = () => {
   const [modal, setModal] = useState(false);
 
   const handleDayChange = date => {
-    const days = getWeekDays(getWeekRange(date).from)
+    const days = getWeekDays(getWeekRange(date).from);
     setSelectedDays(days);
     setDate({
       from: days[0],
@@ -300,6 +300,7 @@ const Home = () => {
             <DayPicker
               localeUtils={MomentLocaleUtils}
               locale="ru"
+              firstDayOfWeek={1}
               className={`Selectable oneMonth`}
               numberOfMonths={1}
               selectedDays={selectedDays}
