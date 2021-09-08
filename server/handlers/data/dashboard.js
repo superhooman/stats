@@ -9,7 +9,7 @@ const hasChild = ['accidents', 'failures'];
 const getData = async (req, res) => {
     const list = ['security', 'accidents', 'work', 'failures', 'pollution', 'med', 'check', 'edu', 'incidents'];
     const result = {};
-    const yearStart = (new Date(req.query.from.split('-')[0], 1, 0)).toISOString().split('T')[0];
+    const yearStart = (new Date(req.query.from.split('-')[0], 1, 1)).toISOString().split('T')[0];
     const weekDateStart = req.query.from.split('T')[0];
     const weekDateEnd = req.query.to.split('T')[0];
     const monthDateStart = startOfMonth(new Date(req.query.from)).toISOString().split('T')[0];
