@@ -16,11 +16,21 @@ import { format } from 'date-fns';
 function getWeekDays(weekStart) {
   const days = [weekStart];
   for (let i = 1; i < 7; i += 1) {
-    days.push(
-      moment(weekStart)
-        .add(i, 'days')
-        .toDate()
-    );
+    if (i === 6) {
+      days.push(
+        moment(weekStart)
+          .add(i, 'days')
+          .endOf('day')
+          .toDate()
+      );
+    } else {
+      days.push(
+        moment(weekStart)
+          .add(i, 'days')
+          .toDate()
+      );
+    }
+
   }
   return days;
 }
@@ -125,6 +135,7 @@ const Home = () => {
   const handleDayChange = date => {
     const days = getWeekDays(getWeekRange(date).from);
     setSelectedDays(days);
+    console.log(days)
     setDate({
       from: days[0],
       to: days[6],
