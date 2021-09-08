@@ -82,7 +82,7 @@ const parseFile = (filepath) => {
     const date = getDate(obj[0].data[0][0]).split('.').reverse().join('-')
 
     for (let line of obj[0].data) {
-        if (!line || line.length < 2) {
+        if (!line || line.length < 1) {
             continue;
         }
         if (line[1] && getRegName(line[1])) {
@@ -91,18 +91,18 @@ const parseFile = (filepath) => {
             if (line[0] === "№" || /Показатели(\s*)по/.test(line[1])) {
                 continue;
             }
-            if (lastIndex > -1 && typeof line[5] === 'string' && line[5].trim()) {
-                data[lastIndex].children.push(line[5])
+            if (lastIndex > -1 && line[4] && line[4].trim()) {
+                data[lastIndex].children.push(line[4])
             }
             continue;
         }
         data.push({
             date: new Date(`${date}T12:00:00.000Z`),
             reg: getRegName(line[1]),
-            value: Number(line[3]) || 0,
-            year: Number(line[4]) || 0,
-            children: typeof line[5] === 'string' && line[5].trim() ? [
-                line[5]
+            value: Number(line[2]) || 0,
+            year: Number(line[3]) || 0,
+            children: line[4] && line[4].trim() ? [
+                line[4]
             ] : []
         });
     }
