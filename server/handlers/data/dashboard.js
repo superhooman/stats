@@ -3,6 +3,11 @@ const Year = require("../../models/year");
 
 const startOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1);
 
+const startOfWeek = (date) => {
+    var day = date.getDay(),
+        diff = date.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+    return new Date(date.setDate(diff));
+}
 
 const hasChild = ['accidents', 'failures'];
 
@@ -10,10 +15,10 @@ const getData = async (req, res) => {
     const list = ['security', 'accidents', 'work', 'failures', 'pollution', 'med', 'check', 'edu', 'incidents'];
     const result = {};
     const yearStart = (new Date(req.query.from.split('-')[0], 0, 1)).toISOString().split('T')[0];
-    const weekDateStart = req.query.from.split('T')[0];
+    const weekDateStart = startOfWeek(new Date(req.query.to));
     const weekDateEnd = req.query.to.split('T')[0];
-    const monthDateStart = startOfMonth(new Date(req.query.from)).toISOString().split('T')[0];
-    console.log(yearStart, weekDateEnd);
+    const monthDateStart = startOfMonth(new Date(req.query.to)).toISOString().split('T')[0];
+
     for (let key of list) {
         result[key] = {};
         const week = await Record.find({

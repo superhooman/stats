@@ -10,6 +10,7 @@ import Modal, {Title as ModalTitle, Actions as ModalActions} from '../../compone
 import labels from '../../labels';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { PlusIcon } from '@heroicons/react/outline';
 
 const Import = () => {
     const router = useRouter();
@@ -96,13 +97,18 @@ const Import = () => {
                 </div>
             </div>
             <Link href="/dashboard/vaccinated">
-                <a className="fixed flex p-4 rounded-full bg-green-600 items-center justify-center bottom-24 right-5">
+                <a className="fixed flex p-4 rounded-full bg-green-600 items-center justify-center bottom-44 right-5">
                     <ChartPieIcon className="h-6 w-6" />
+                </a>
+            </Link>
+            <Link href="/dashboard/edit">
+                <a className="fixed flex p-4 rounded-full bg-green-600 items-center justify-center bottom-24 right-5">
+                    <PencilIcon className="h-6 w-6" />
                 </a>
             </Link>
             <Link href="/dashboard/manual">
                 <a className="fixed flex p-4 rounded-full bg-green-600 items-center justify-center bottom-5 right-5">
-                    <PencilIcon className="h-6 w-6" />
+                    <PlusIcon className="h-6 w-6" />
                 </a>
             </Link>
             {md ? <Modal open={response.open} close={() => setResponse((v) => ({ ...v, open: false }))}>

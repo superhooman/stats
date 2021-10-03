@@ -16,15 +16,60 @@ import DayPicker, { DateUtils } from "react-day-picker";
 import "react-day-picker/lib/style.css";
 import MomentLocaleUtils from "react-day-picker/moment";
 import moment from "moment"
-import Modal, {Title as ModalTitle, Actions as ModalActions} from "./modal"
+import Modal, { Title as ModalTitle, Actions as ModalActions } from "./modal"
 import Loader from "./loader";
 import Table from "./table";
 import Button from './button';
 import labels from '../labels';
+import Select from './select';
 import GlobalContext from "../utils/globalContext";
 
-const Page = ({ type }) => {
-    const { date, setDate } = useContext(GlobalContext)
+import 'moment/locale/ru';
+
+const currentYear = new Date().getFullYear() - 1;
+const fromMonth = new Date(currentYear, 0);
+const toMonth = new Date(currentYear + 10, 11);
+
+function YearMonthForm({ date, localeUtils, onChange }) {
+    const months = localeUtils.getMonths('ru');
+
+    const years = [];
+    for (let i = fromMonth.getFullYear(); i <= toMonth.getFullYear(); i += 1) {
+        years.push(i);
+    }
+
+    const handleChange = function handleChange(e) {
+        const { year, month } = e.target.form;
+        onChange(new Date(year.value, month.value));
+    };
+
+    return (
+        <form className="DayPicker-Caption">
+            <div className="grid grid-cols-7 gap-3">
+                <Select className="col-span-4" options={months.map((month, i) => ({
+                    label: month,
+                    value: i
+                }))} name="month" onChange={handleChange} value={date.getMonth()} />
+                <Select className="col-span-3" options={years.map((year) => ({
+                    label: year,
+                    value: year
+                }))} name="year" onChange={handleChange} value={date.getFullYear()} />
+            </div>
+        </form>
+    );
+}
+
+const getDate = () => {
+    return {
+        from: moment().subtract(30, 'days').toDate(),
+        to: moment().toDate(),
+    }
+}
+
+const Page = ({ type, ignoreDate = false }) => {
+    const { date, setDate } = useContext(GlobalContext);
+    const [month, setMonth] = useState((ignoreDate ? getDate() : date).from);
+    const [pageDate, setPageDate] = useState(ignoreDate ? getDate() : date);
     const [state, setState] = useState({
         isLoading: true,
         data: {
@@ -33,11 +78,14 @@ const Page = ({ type }) => {
     });
     const [modal, setModal] = useState(false);
     const handleDayClick = (day) => {
-        if(moment(day).isAfter(moment())){
+        if (moment(day).isAfter(moment())) {
             return
         }
         const range = DateUtils.addDayToRange(day, date);
-        setDate(range);
+        setPageDate(range);
+        if (!ignoreDate) {
+            setDate(range);
+        }
     };
     const wrap = useRef();
     const [width, setWidth] = useState(0);
@@ -46,6 +94,13 @@ const Page = ({ type }) => {
             setWidth(wrap.current.clientWidth);
         }
     }
+    useEffect(() => {
+        if (!ignoreDate) {
+            setPageDate(date);
+        } else {
+            setPageDate(getDate())
+        }
+    }, [date, ignoreDate]);
     useEffect(() => {
         resize();
         window.addEventListener("resize", resize);
@@ -60,7 +115,7 @@ const Page = ({ type }) => {
                 items: []
             }
         })
-        fetch(`/data/key?key=${type}&dateStart=${date.from.toISOString().split('T')[0]}&dateEnd=${date.to.toISOString().split('T')[0]}`)
+        fetch(`/data/key?key=${type}&dateStart=${pageDate.from.toISOString().split('T')[0]}&dateEnd=${pageDate.to.toISOString().split('T')[0]}`)
             .then((res) => res.json())
             .then((json) => {
                 setState({
@@ -74,9 +129,11 @@ const Page = ({ type }) => {
                     }
                 })
             })
-    }, [type, date])
+    }, [type, pageDate])
 
     const data = state.isLoading ? [] : state.data.items;
+    const maxCount = Math.max(...([1, ...data.map((i) => i.data)])) + 1;
+
     return (
         <>
             <div className="pb-4 px-8 flex items-center border-b border-gray-600">
@@ -85,13 +142,13 @@ const Page = ({ type }) => {
                 <Button disabled icon={<DownloadIcon />} />
             </div>
             <div className="py-4 px-8">
-                <div className="text-sm p-4 rounded-lg bg-gray-800 w-min whitespace-nowrap">Показаны данные с <b>{format(date.from, 'd LLL y', { locale: ru })}</b> по <b>{format(date.to, 'd LLL y', { locale: ru })}</b></div>
+                <div className="text-sm p-4 rounded-lg bg-gray-800 w-min whitespace-nowrap">Показаны данные с <b>{format(pageDate.from, 'd LLL y', { locale: ru })}</b> по <b>{format(pageDate.to, 'd LLL y', { locale: ru })}</b></div>
             </div>
             <div className="py-4" ref={wrap}>
                 {state.isLoading ? <Loader /> : (
-                    <div className="grid grid-cols-2 gap-3">
+                    <div>
                         <LineChart
-                            width={width / 2 - 6}
+                            width={width}
                             height={350}
                             data={data}
                             margin={{
@@ -107,6 +164,7 @@ const Page = ({ type }) => {
                                 tick={{ fontSize: 12 }}
                                 tickLine={false}
                                 width={32}
+                                tickCount={maxCount < 20 ? maxCount : 5}
                             />
                             <Tooltip
                                 content={({ active, payload, label }) =>
@@ -132,48 +190,6 @@ const Page = ({ type }) => {
                                 strokeWidth={2}
                             />
                         </LineChart>
-                        <BarChart
-                            width={width / 2 - 6}
-                            height={350}
-                            data={data}
-                            margin={{
-                                top: 5,
-                                right: 30,
-                                left: 20,
-                                bottom: 5,
-                            }}
-                        >
-                            <CartesianGrid stroke="#525252" vertical={false} />
-                            <YAxis
-                                axisLine={false}
-                                tick={{ fontSize: 12 }}
-                                tickLine={false}
-                                width={32}
-                            />
-                            <Tooltip
-                                content={({ active, payload, label }) =>
-                                    active && payload ? (
-                                        <div className="rounded-lg py-2 px-4 bg-gray-700 leading-none border border-gray-600">
-                                            <span className="text-xs">
-                                                <b>{label || "Дата"}</b>: {payload[0].value}
-                                            </span>
-                                        </div>
-                                    ) : null
-                                }
-                            />
-                            <XAxis
-                                axisLine={false}
-                                tick={{ fontSize: 12 }}
-                                tickMargin={12}
-                                dataKey="date"
-                            />
-                            <Bar
-                                type="linear"
-                                dataKey="data"
-                                fill="#10B981"
-                                strokeWidth={2}
-                            />
-                        </BarChart>
                     </div>
                 )}
             </div>
@@ -193,7 +209,7 @@ const Page = ({ type }) => {
                         label: 'Описание',
                         prop: 'desc'
                     }
-                ]} data={data.map((el) => ({
+                ]} data={data.filter(({ data }) => data > 0).map((el) => ({
                     ...el,
                     desc: (
                         <div className="divide-y divide-gray-700 divide-solid">
@@ -207,17 +223,27 @@ const Page = ({ type }) => {
             <Modal open={modal} close={() => setModal(false)}>
                 <ModalTitle>Фильтрация по дате</ModalTitle>
                 <DayPicker
-                        localeUtils={MomentLocaleUtils}
-                        locale="ru"
-                        className={`Selectable oneMonth`}
-                        numberOfMonths={1}
-                        disabledDays={[{after: new Date()}]}
-                        selectedDays={[date.from, date]}
-                        modifiers={{start: date.from, end: date.to}}
-                        onDayClick={handleDayClick}
-                    />
+                    localeUtils={MomentLocaleUtils}
+                    month={month}
+                    fromMonth={fromMonth}
+                    toMonth={toMonth}
+                    locale="ru"
+                    className={`Selectable oneMonth`}
+                    numberOfMonths={1}
+                    disabledDays={[{ after: new Date() }]}
+                    selectedDays={[pageDate.from, pageDate]}
+                    modifiers={{ start: pageDate.from, end: pageDate.to }}
+                    onDayClick={handleDayClick}
+                    captionElement={({ date, localeUtils }) => (
+                        <YearMonthForm
+                            date={date}
+                            localeUtils={localeUtils}
+                            onChange={setMonth}
+                        />
+                    )}
+                />
                 <ModalActions>
-                        <Button onClick={() => setModal(false)} >Закрыть</Button>
+                    <Button onClick={() => setModal(false)} >Закрыть</Button>
                 </ModalActions>
             </Modal>
         </>

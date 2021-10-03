@@ -7,44 +7,48 @@ import { CalendarIcon, DownloadIcon } from "@heroicons/react/outline";
 import moment from "moment"
 import Link from "next/link"
 import Layout from '../components/layout';
+import Select from '../components/select';
 import Loader from '../components/loader';
 import GlobalContext from '../utils/globalContext';
 import Modal, { Title as ModalTitle, Actions as ModalActions } from "../components/modal";
 import Button from '../components/button'
 import { format } from 'date-fns';
 
-function getWeekDays(weekStart) {
-  const days = [weekStart];
-  for (let i = 1; i < 7; i += 1) {
-    if (i === 6) {
-      days.push(
-        moment(weekStart)
-          .add(i, 'days')
-          .endOf('day')
-          .toDate()
-      );
-    } else {
-      days.push(
-        moment(weekStart)
-          .add(i, 'days')
-          .toDate()
-      );
-    }
+import 'moment/locale/ru';
 
+const currentYear = new Date().getFullYear() - 1;
+const fromMonth = new Date(currentYear, 0);
+const toMonth = new Date(currentYear + 10, 11);
+
+function YearMonthForm({ date, localeUtils, onChange }) {
+  const months = localeUtils.getMonths('ru');
+
+  const years = [];
+  for (let i = fromMonth.getFullYear(); i <= toMonth.getFullYear(); i += 1) {
+    years.push(i);
   }
-  return days;
+
+  const handleChange = function handleChange(e) {
+    const { year, month } = e.target.form;
+    onChange(new Date(year.value, month.value));
+  };
+
+  return (
+    <form className="DayPicker-Caption">
+      <div className="grid grid-cols-7 gap-3">
+        <Select className="col-span-4" options={months.map((month, i) => ({
+          label: month,
+          value: i
+        }))} name="month" onChange={handleChange} value={date.getMonth()} />
+        <Select className="col-span-3" options={years.map((year) => ({
+          label: year,
+          value: year
+        }))} name="year" onChange={handleChange} value={date.getFullYear()} />
+      </div>
+    </form>
+  );
 }
 
-function getWeekRange(date) {
-  return {
-    from: moment(date)
-      .startOf('isoWeek')
-      .toDate(),
-    to: moment(date)
-      .endOf('isoWeek')
-      .toDate(),
-  };
-}
 
 const INITIAL_STATE = {
   isLoading: true,
@@ -126,35 +130,24 @@ const Detail = ({ title, value }) => (
 
 const Home = () => {
   const [state, setState] = useState(INITIAL_STATE);
+
   const { date, setDate } = useContext(GlobalContext);
-  const [selectedDays, setSelectedDays] = useState(getWeekRange(date));
-  const [hoverRange, setHoverRange] = useState(undefined);
+  const [month, setMonth] = useState(date.to);
 
   const [modal, setModal] = useState(false);
 
-  const handleDayChange = date => {
-    const days = getWeekDays(getWeekRange(date).from);
-    setSelectedDays(days);
-    console.log(days)
-    setDate({
-      from: days[0],
-      to: days[6],
-    })
-  };
-
-  const handleDayEnter = date => {
-    setHoverRange(getWeekRange(date));
-  };
-
-  const handleDayLeave = () => {
-    setHoverRange(undefined);
-  };
-
-  const handleWeekClick = (weekNumber, days, e) => {
-    setSelectedDays(days);
+  const handleDayClick = (day) => {
+    if (moment(day).isAfter(moment())) {
+      return
+    }
+    const range = DateUtils.addDayToRange(day, date);
+    setDate(range);
   };
 
   useEffect(() => {
+    if (!date.from || !date.to) {
+      return;
+    }
     fetch(`/data?from=${date.from.toISOString()}&to=${date.to.toISOString()}`).then((res) => res.json()).then((json) => {
       if (json.success) {
         setState({
@@ -164,21 +157,6 @@ const Home = () => {
       }
     })
   }, [date]);
-
-  const daysAreSelected = selectedDays.length > 0;
-
-  const modifiers = {
-    hoverRange,
-    selectedRange: daysAreSelected && {
-      from: selectedDays[0],
-      to: selectedDays[6],
-    },
-    hoverRangeStart: hoverRange && hoverRange.from,
-    hoverRangeEnd: hoverRange && hoverRange.to,
-    selectedRangeStart: daysAreSelected && selectedDays[0],
-    selectedRangeEnd: daysAreSelected && selectedDays[6],
-  };
-
 
   if (state.isLoading) {
     return <Loader />
@@ -191,7 +169,7 @@ const Home = () => {
           <Button disabled icon={<DownloadIcon />} />
         </div>
         <div className="py-4">
-          <div className="text-sm p-4 rounded-lg bg-gray-800 w-min whitespace-nowrap">Показаны данные с <b>{format(date.from, 'd LLL y', { locale: ru })}</b> по <b>{format(date.to, 'd LLL y', { locale: ru })}</b></div>
+          <div className="text-sm p-4 rounded-lg bg-gray-800 w-min whitespace-nowrap">Показаны данные с <b>{date.from ? format(date.from, 'd LLL y', { locale: ru }) : ''}</b> по <b>{date.to ? format(date.to, 'd LLL y', { locale: ru }) : ''}</b></div>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
           <Card href="check" className="flex flex-col h-full">
@@ -307,22 +285,26 @@ const Home = () => {
         </div>
         <Modal open={modal} close={() => setModal(false)}>
           <ModalTitle>Фильтрация по дате</ModalTitle>
-          <div className="SelectedWeekExample">
-            <DayPicker
-              localeUtils={MomentLocaleUtils}
-              locale="ru"
-              firstDayOfWeek={1}
-              className={`Selectable oneMonth`}
-              numberOfMonths={1}
-              selectedDays={selectedDays}
-              showOutsideDays
-              modifiers={modifiers}
-              onDayClick={handleDayChange}
-              onDayMouseEnter={handleDayEnter}
-              onDayMouseLeave={handleDayLeave}
-              onWeekClick={handleWeekClick}
-            />
-          </div>
+          <DayPicker
+            localeUtils={MomentLocaleUtils}
+            month={month}
+            fromMonth={fromMonth}
+            toMonth={toMonth}
+            locale="ru"
+            className={`Selectable oneMonth`}
+            numberOfMonths={1}
+            disabledDays={[{ after: new Date() }]}
+            selectedDays={[date.from, date]}
+            modifiers={{ start: date.from, end: date.to }}
+            onDayClick={handleDayClick}
+            captionElement={({ date, localeUtils }) => (
+              <YearMonthForm
+                date={date}
+                localeUtils={localeUtils}
+                onChange={setMonth}
+              />
+            )}
+          />
           <ModalActions>
             <Button onClick={() => setModal(false)} >Закрыть</Button>
           </ModalActions>
