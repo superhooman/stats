@@ -2,6 +2,8 @@ const xlsx = require('node-xlsx');
 const { sendError, errEnum } = require('../../errors');
 const Import = require('../../models/import');
 
+const dateRegexp = /(\d\d).(\d\d).(\d\d\d\d)/g;
+
 const upload = async (req, res) => {
     if(!req.file){
         return sendError(req, res, errEnum.NO_FILE);
@@ -92,22 +94,60 @@ const parseFile = (filepath) => {
                 continue;
             }
             if (lastIndex > -1 && line[4] && line[4].trim()) {
-                data[lastIndex].children.push(line[4])
+                let lineDate = date;
+                if (dateRegexp.test(line[3])) {
+                    const [parsedDate] = line[3].match(dateRegexp);
+                    lineDate = parsedDate.split('.').reverse().join('-');
+                }
+                data[lastIndex].children.push({
+                    text: line[4],
+                    date: new Date(`${lineDate}T12:00:00.000Z`),
+                });
             }
             continue;
         }
+        let lineDate = date;
+        if (dateRegexp.test(line[3])) {
+            const [parsedDate] = line[3].match(dateRegexp);
+            lineDate = parsedDate.split('.').reverse().join('-');
+        }
         data.push({
-            date: new Date(`${date}T12:00:00.000Z`),
+            date: new Date(`${lineDate}T12:00:00.000Z`),
             reg: getRegName(line[1]),
             value: Number(line[2]) || 0,
-            year: Number(line[3]) || 0,
             children: line[4] && line[4].trim() ? [
-                line[4]
+                {
+                    text: line[4],
+                    date: new Date(`${lineDate}T12:00:00.000Z`),
+                }
             ] : []
         });
     }
 
-    return data;
+    const results = [];
+
+    for (let i in data) {
+        if (data[i].children.length > 1 && data[i].children.length === data[i].value) {
+            for (let j in data[i].children) {
+                const children = data[i].children[j];
+                results.push({
+                    date: children.date,
+                    reg: data[i].reg,
+                    value: 1,
+                    children: [children.text]
+                })
+            }
+        } else {
+            results.push({
+                date: data[i].date,
+                reg: data[i].reg,
+                value: data[i].value,
+                children: data[i].children.map((el) => el.text),
+            });
+        }
+    }
+
+    return results;
 }
 
 module.exports = upload;

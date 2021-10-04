@@ -69,10 +69,10 @@ const Vaccinated = () => {
     return (
         <div ref={wrap}>
             <div className="font-bold text-lg mx-4 flex-1">Данные по вакцинации</div>
-            <div className="text-sm px-4 py-2 ml-4 mt-4 rounded-lg bg-gray-800 w-min whitespace-nowrap">
+            <div className="text-sm px-4 py-2 ml-4 mt-4 rounded-lg bg-gray-800 flex items-center">
                 {
                     colors.map((color, i) => (
-                        <div key={color} className="flex items-center py-1">
+                        <div key={color} className="flex items-center mr-8">
                             <div style={{
                                 backgroundColor: color
                             }} className="w-4 h-4 rounded mr-3" />
