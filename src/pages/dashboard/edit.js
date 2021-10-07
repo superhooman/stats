@@ -149,7 +149,20 @@ const Edit = () => {
       }
     })
     getData();
-  }, [type, date])
+  }, [type, date]);
+
+  const onRemove = (id) => {
+    const sure = confirm('Вы уверены?');
+    if (!sure) {
+      return;
+    }
+    axios({
+      url: `/data/remove/${id}`,
+      method: "DELETE",
+    }).then(() => {
+      getData();
+    })
+  }
 
   return (
     <div className="max-w-xl py-8 px-4 mx-auto">
@@ -193,6 +206,9 @@ const Edit = () => {
                   open: true
                 })
               }} className="w-full mt-2">Редактировать</Button>
+              <Button onClick={() => {
+                onRemove(record._id);
+              }} className="w-full mt-2">Удалить</Button>
             </div>
           ))}
         </div>

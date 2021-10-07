@@ -105,9 +105,11 @@ const Page = ({ type, ignoreDate = false }) => {
         resize();
         window.addEventListener("resize", resize);
         return () => {
-            window.removeEventListener("resize", resize)
+            window.removeEventListener("resize", resize);
         }
-    }, [])
+    }, []);
+
+
     useEffect(() => {
         setState({
             isLoading: true,
