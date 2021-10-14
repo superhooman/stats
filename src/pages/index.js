@@ -175,8 +175,8 @@ const Home = () => {
           <Card href="check" className="flex flex-col h-full">
             <CardTitle>Кол-во проверок по промышленной, пожарной безопасности и ООС</CardTitle>
             <div className="divide-y divide-gray-600 h-full flex flex-col justify-around">
-              <Detail title="За неделю" value={state.data.check.week} />
-              <Detail title="За месяц" value={state.data.check.month} />
+              <Detail title="За прошедшую неделю" value={state.data.check.week} />
+              <Detail title="С начала месяца" value={state.data.check.month} />
               <Detail title="С начала года" value={state.data.check.year} />
             </div>
           </Card>
@@ -187,13 +187,13 @@ const Home = () => {
               <span>Подрядные орг.</span>
             </div>
             <div className="divide-y divide-gray-600">
-              <Detail title="За неделю" value={(
+              <Detail title="За прошедшую неделю" value={(
                 <div className="flex justify-between">
                   <span>{state.data.accidents.weekMain}</span>
                   <span>{state.data.accidents.weekChild}</span>
                 </div>
               )} />
-              <Detail title="За месяц" value={(
+              <Detail title="С начала месяца" value={(
                 <div className="flex justify-between">
                   <span>{state.data.accidents.monthMain}</span>
                   <span>{state.data.accidents.monthChild}</span>
@@ -214,13 +214,13 @@ const Home = () => {
               <span>Подрядные орг.</span>
             </div>
             <div className="divide-y divide-gray-600">
-              <Detail title="За неделю" value={(
+              <Detail title="За прошедшую неделю" value={(
                 <div className="flex justify-between">
                   <span>{state.data.failures.weekMain}</span>
                   <span>{state.data.failures.weekChild}</span>
                 </div>
               )} />
-              <Detail title="За месяц" value={(
+              <Detail title="С начала месяца" value={(
                 <div className="flex justify-between">
                   <span>{state.data.failures.monthMain}</span>
                   <span>{state.data.failures.monthChild}</span>
@@ -237,48 +237,48 @@ const Home = () => {
           <Card href="security">
             <CardTitle>Кол-во инцидентов по СБ</CardTitle>
             <div className="divide-y divide-gray-600">
-              <Detail title="За неделю" value={state.data.security.week} />
-              <Detail title="За месяц" value={state.data.security.month} />
+              <Detail title="За прошедшую неделю" value={state.data.security.week} />
+              <Detail title="С начала месяца" value={state.data.security.month} />
               <Detail title="С начала года" value={state.data.security.year} />
             </div>
           </Card>
           <Card href="work">
             <CardTitle>Были приостановлены работы</CardTitle>
             <div className="divide-y divide-gray-600">
-              <Detail title="За неделю" value={state.data.work.week} />
-              <Detail title="За месяц" value={state.data.work.month} />
+              <Detail title="За прошедшую неделю" value={state.data.work.week} />
+              <Detail title="С начала месяца" value={state.data.work.month} />
               <Detail title="С начала года" value={state.data.work.year} />
             </div>
           </Card>
           <Card href="pollution">
             <CardTitle>Загрязнение окружающей среды</CardTitle>
             <div className="divide-y divide-gray-600">
-              <Detail title="За неделю" value={state.data.pollution.week} />
-              <Detail title="За месяц" value={state.data.pollution.month} />
+              <Detail title="За прошедшую неделю" value={state.data.pollution.week} />
+              <Detail title="С начала месяца" value={state.data.pollution.month} />
               <Detail title="С начала года" value={state.data.pollution.year} />
             </div>
           </Card>
           <Card href="med">
             <CardTitle>Кол-во медицинских эвакуаций</CardTitle>
             <div className="divide-y divide-gray-600">
-              <Detail title="За неделю" value={state.data.med.week} />
-              <Detail title="За месяц" value={state.data.med.month} />
+              <Detail title="За прошедшую неделю" value={state.data.med.week} />
+              <Detail title="С начала месяца" value={state.data.med.month} />
               <Detail title="С начала года" value={state.data.med.year} />
             </div>
           </Card>
           <Card href="edu">
             <CardTitle>Проведено обучений</CardTitle>
             <div className="divide-y divide-gray-600">
-              <Detail title="За неделю" value={state.data.edu.week} />
-              <Detail title="За месяц" value={state.data.edu.month} />
+              <Detail title="За прошедшую неделю" value={state.data.edu.week} />
+              <Detail title="С начала месяца" value={state.data.edu.month} />
               <Detail title="С начала года" value={state.data.edu.year} />
             </div>
           </Card>
           <Card href="incidents">
             <CardTitle>Кол-во инцидентов</CardTitle>
             <div className="divide-y divide-gray-600">
-              <Detail title="За неделю" value={state.data.incidents.week} />
-              <Detail title="За месяц" value={state.data.incidents.month} />
+              <Detail title="За прошедшую неделю" value={state.data.incidents.week} />
+              <Detail title="С начала месяца" value={state.data.incidents.month} />
               <Detail title="С начала года" value={state.data.incidents.year} />
             </div>
           </Card>

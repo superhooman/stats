@@ -5,8 +5,8 @@ const GlobalContext = createContext({
   user: null,
   setUser: () => {},
   date: {
-    from: moment().subtract(14, 'days').toDate(),
-    to: moment().subtract(7, 'days').toDate(),
+    from: moment().startOf('week').subtract(6, 'days').toDate(),
+    to: moment().endOf('week').subtract(6, 'days').toDate(),
   },
   setDate: () => {},
 });

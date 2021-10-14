@@ -10,8 +10,8 @@ function MyApp({ Component, pageProps }) {
   const getLayout = Component.getLayout || (page => page)
   const [user, setUser] = useState(null);
   const [date, setDate] = useState({
-    from: moment().subtract(14, 'days').toDate(),
-    to: moment().subtract(7, 'days').toDate(),
+    from: moment().startOf('week').subtract(7, 'days').toDate(),
+    to: moment().endOf('week').subtract(7, 'days').toDate(),
   })
   useEffect(() => {
     axios('/user/me').then((res) => {

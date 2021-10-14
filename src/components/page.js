@@ -47,7 +47,7 @@ const fixData = (data) => {
             return [...prev, ...el.notes]
         }, []),
         timestamp: result[el][0].timestamp,
-    })).sort((a,b) => a.timestamp - b.timestamp)
+    })).sort((a, b) => a.timestamp - b.timestamp)
 
     console.log(output);
 
@@ -270,6 +270,12 @@ const Page = ({ type, ignoreDate = false }) => {
                     )}
                 />
                 <ModalActions>
+                    <Button onClick={() => {
+                        setDate({
+                            from: moment().startOf('week').subtract(7, 'days').toDate(),
+                            to: moment().endOf('week').subtract(7, 'days').toDate(),
+                        })
+                    }}>Сброс</Button>
                     <Button onClick={() => setModal(false)} >Закрыть</Button>
                 </ModalActions>
             </Modal>
