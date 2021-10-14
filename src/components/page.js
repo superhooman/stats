@@ -30,6 +30,30 @@ const currentYear = new Date().getFullYear() - 1;
 const fromMonth = new Date(currentYear, 0);
 const toMonth = new Date(currentYear + 10, 11);
 
+const fixData = (data) => {
+    const result = {};
+
+    data.forEach((el) => {
+        result[el.date] = result[el.date] || [];
+        result[el.date].push(el);
+    });
+
+    const output = Object.keys(result).map((el) => ({
+        date: el,
+        data: result[el].reduce((prev, el) => {
+            return prev + el.data
+        }, 0),
+        notes: result[el].reduce((prev, el) => {
+            return [...prev, ...el.notes]
+        }, []),
+        timestamp: result[el][0].timestamp,
+    })).sort((a,b) => a.timestamp - b.timestamp)
+
+    console.log(output);
+
+    return output;
+}
+
 function YearMonthForm({ date, localeUtils, onChange }) {
     const months = localeUtils.getMonths('ru');
 
@@ -123,11 +147,12 @@ const Page = ({ type, ignoreDate = false }) => {
                 setState({
                     isLoading: false,
                     data: {
-                        items: json.records.map((el) => ({
+                        items: fixData(json.records.map((el) => ({
+                            timestamp: (new Date(el.date)).getTime(),
                             date: format(new Date(el.date), 'd LLL y', { locale: ru }),
                             data: el.value,
                             notes: el.notes
-                        }))
+                        })))
                     }
                 })
             })
