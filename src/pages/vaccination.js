@@ -14,7 +14,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-  if (percent < 0.09) {
+  if (percent < 0.06) {
       return null;
   }
 
@@ -107,14 +107,14 @@ const Vaccinated = () => {
                     
                     <div key={el._id}>
                         <h1 className="text-center font-bold -mb-6">{el.title}</h1>
-                        <PieChart width={width/2} height={width/2 * 0.65}>
+                        <PieChart width={width/2} height={width/2 * 0.75}>
                             <Pie
                                 data={data}
                                 cx="50%"
                                 cy="50%"
                                 labelLine={false}
                                 label={renderCustomizedLabel}
-                                outerRadius={100}
+                                outerRadius={(width / 2) * 0.25}
                                 stroke="#171717"
                                 dataKey="value"
                             >

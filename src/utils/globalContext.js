@@ -4,6 +4,7 @@ import { createContext } from 'react';
 const GlobalContext = createContext({
   user: null,
   setUser: () => {},
+  dateTouched: false,
   date: {
     from: moment().startOf('week').subtract(6, 'days').toDate(),
     to: moment().endOf('week').subtract(6, 'days').toDate(),

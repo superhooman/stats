@@ -9,6 +9,7 @@ function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const getLayout = Component.getLayout || (page => page)
   const [user, setUser] = useState(null);
+  const [dateTouched, setDateTouched] = useState(false);
   const [date, setDate] = useState({
     from: moment().startOf('week').subtract(7, 'days').toDate(),
     to: moment().endOf('week').subtract(7, 'days').toDate(),
@@ -35,7 +36,11 @@ function MyApp({ Component, pageProps }) {
       user,
       setUser,
       date,
-      setDate,
+      dateTouched,
+      setDate: (data) => {
+        setDateTouched(true);
+        setDate(data);
+      },
     }}>
       {getLayout(<Component {...pageProps} />)}
     </GlobalContext.Provider>

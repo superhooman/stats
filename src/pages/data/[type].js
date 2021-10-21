@@ -3,11 +3,6 @@ import Layout from '../../components/layout';
 import Loader from '../../components/loader';
 import Page from '../../components/page';
 
-const ignoreDate = [
-    'pnb',
-    'med'
-]
-
 const Detail = () => {
     const router = useRouter();
     const { type } = router.query;
@@ -16,7 +11,7 @@ const Detail = () => {
             <Loader />
         )
     }
-    return <Page type={type} ignoreDate={ignoreDate.indexOf(type) > -1} />
+    return <Page type={type} />
 }
 
 Detail.getLayout = page => (

@@ -65,7 +65,7 @@ const Table = ({
             // eslint-disable-next-line react/no-array-index-key
             <tr key={`row-${i}`}>
               {headers.map((col) => (
-                <td className={`p-0 ${col.nowrap ? "whitespace-nowrap" : ""}`}>
+                <td key={col.prop} className={`p-0 ${col.nowrap ? "whitespace-nowrap" : ""}`}>
                   <div className="px-6 py-4">
                     {typeof row[col.prop] === 'string' ? (
                       <span className="text-gray-500">{row[col.prop]}</span>
@@ -78,7 +78,7 @@ const Table = ({
             // eslint-disable-next-line react/no-array-index-key
             <tr key={`row-${i}`}>
               {headers.map((col) => (
-                <td className="p-0">
+                <td key={col.prop} className="p-0">
                   <div className="px-6 py-4">
                     {typeof row[col.prop] === 'string' ? (
                       <span className="text-gray-500">{row[col.prop]}</span>
