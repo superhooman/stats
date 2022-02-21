@@ -1,7 +1,7 @@
 import { CalendarIcon, DownloadIcon } from "@heroicons/react/outline";
 import { format, parse } from "date-fns";
 import { ru } from 'date-fns/locale'
-import { useState, useRef, useEffect, useContext, useMemo } from "react";
+import { useState, useRef, useEffect, useContext, useMemo, useCallback } from "react";
 import {
     CartesianGrid,
     Line,
@@ -192,6 +192,13 @@ const Page = ({ type }) => {
     const data = state.isLoading ? [] : state.data.items;
     const maxCount = Math.max(...([1, ...data.map((i) => i.data)])) + 1;
 
+    const scrollTo = useCallback((event) => {
+        if (event.activePayload?.[0]?.payload?.timestamp) {
+            const element = document.getElementById(event.activePayload[0].payload.timestamp);
+            window.scrollTo(0, element.getBoundingClientRect().y);
+        }
+    }, []);
+
     return (
         <>
             <div className="pb-4 px-8 flex items-center border-b border-gray-600">
@@ -213,6 +220,7 @@ const Page = ({ type }) => {
                                     width={width}
                                     height={350}
                                     data={data}
+                                    onClick={scrollTo}
                                     margin={{
                                         top: 5,
                                         right: 30,
@@ -257,6 +265,7 @@ const Page = ({ type }) => {
                                     width={width}
                                     height={350}
                                     data={data}
+                                    onClick={scrollTo}
                                     margin={{
                                         top: 5,
                                         right: 30,

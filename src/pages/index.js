@@ -306,6 +306,12 @@ const Home = () => {
             )}
           />
           <ModalActions>
+          <Button onClick={() => {
+              setDate({
+                from: moment().startOf('week').subtract(7, 'days').toDate(),
+                to: moment().endOf('week').subtract(7, 'days').toDate(),
+              })
+          }}>Сброс</Button>
             <Button onClick={() => setModal(false)} >Закрыть</Button>
           </ModalActions>
         </Modal>

@@ -47,6 +47,10 @@ const app = new App({
       path: '/uploads',
       folder: path.join(process.cwd(), 'uploads'),
     },
+    {
+      path: '/',
+      folder: path.join(process.cwd(), 'public'),
+    },
   ],
 });
 

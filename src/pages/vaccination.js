@@ -26,10 +26,10 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 };
 
 const colors = [
-    '#3366cc',
-    '#109618',
-    '#ff9900',
-    '#dc3912'
+    '#7bb4ec',
+    '#434348',
+    '#90ed7d',
+    '#f7a35b'
 ];
 
 const labels = [
@@ -44,7 +44,50 @@ const order = [
     "Офис",
     "Акшабулак",
     "Нуралы/Аксай"
-]
+];
+
+const Chart = ({ title, data, id, height, width }) => {
+    useEffect(() => {
+        Highcharts.chart(id, {
+            chart: {
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 45,
+                    beta: 0
+                },
+                height,
+                width,
+            },
+            title: {
+                text: title,
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.y}</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    depth: 35,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}'
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Кол-во',
+                data: data
+            }]
+        });
+    }, [id, title, data]);
+
+    return (
+        <div id={id} />
+    )
+}
 
 const Vaccinated = () => {
     const [data, setData] = useState([]);
@@ -97,16 +140,18 @@ const Vaccinated = () => {
                                 [labels[1], el.full],
                                 [labels[2], el.cannot],
                                 [labels[3], el.no]
-                    ].map((el) => (
-                        {
-                            label: el[0],
-                            value: el[1]
-                        }
-                    ))
+                    ]
                     return(
                     
                     <div key={el._id}>
-                        <h1 className="text-center font-bold -mb-6">{el.title}</h1>
+                        <Chart
+                            title={el.title}
+                            data={data}
+                            id={el._id}
+                            width={width/2}
+                            height={width/2 * 0.75}
+                        />
+                        {/* <h1 className="text-center font-bold -mb-6">{el.title}</h1>
                         <PieChart width={width/2} height={width/2 * 0.75}>
                             <Pie
                                 data={data}
@@ -131,7 +176,7 @@ const Vaccinated = () => {
                                         </div>
                                     ) : null
                                 } />
-                        </PieChart>
+                        </PieChart> */}
                     </div>
                 )})}
             </div>

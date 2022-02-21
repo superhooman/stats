@@ -63,7 +63,7 @@ const Table = ({
         <tbody className="bg-gray-900 divide-y divide-gray-800 align-top">
           {!isFetching ? data.map((row, i) => (
             // eslint-disable-next-line react/no-array-index-key
-            <tr key={`row-${i}`}>
+            <tr id={row.timestamp} key={`row-${i}`}>
               {headers.map((col) => (
                 <td key={col.prop} className={`p-0 ${col.nowrap ? "whitespace-nowrap" : ""}`}>
                   <div className="px-6 py-4">
