@@ -234,6 +234,7 @@ const Page = ({ type }) => {
                                         tick={{ fontSize: 12 }}
                                         tickLine={false}
                                         width={32}
+                                        allowDecimals={false}
                                         tickCount={maxCount < 20 ? maxCount : 5}
                                     />
                                     <Tooltip
@@ -279,6 +280,7 @@ const Page = ({ type }) => {
                                         tick={{ fontSize: 12 }}
                                         tickLine={false}
                                         width={32}
+                                        allowDecimals={false}
                                     />
                                     <Tooltip
                                         cursor={{

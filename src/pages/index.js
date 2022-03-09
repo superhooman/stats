@@ -15,6 +15,7 @@ import Button from '../components/button'
 import { format } from 'date-fns';
 
 import 'moment/locale/ru';
+import labels from '../labels';
 
 const currentYear = new Date().getFullYear() - 1;
 const fromMonth = new Date(currentYear, 0);
@@ -103,7 +104,42 @@ const INITIAL_STATE = {
       week: 0,
       month: 0,
       year: 0,
-    }
+    },
+    pnb: {
+      week: 0,
+      month: 0,
+      year: 0,
+    },
+    directions: {
+      week: 0,
+      month: 0,
+      year: 0,
+    },
+    control: {
+      week: 0,
+      month: 0,
+      year: 0,
+    },
+    train: {
+      week: 0,
+      month: 0,
+      year: 0,
+    },
+    meeting: {
+      week: 0,
+      month: 0,
+      year: 0,
+    },
+    auto: {
+      week: 0,
+      month: 0,
+      year: 0,
+    },
+    gazovoz: {
+      week: 0,
+      month: 0,
+      year: 0,
+    },
   }
 }
 
@@ -171,7 +207,7 @@ const Home = () => {
         <div className="py-4">
           <div className="text-sm p-4 rounded-lg bg-gray-800 w-min whitespace-nowrap">Показаны данные с <b>{date.from ? format(date.from, 'd LLL y', { locale: ru }) : ''}</b> по <b>{date.to ? format(date.to, 'd LLL y', { locale: ru }) : ''}</b></div>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           <Card href="check" className="flex flex-col h-full">
             <CardTitle>Кол-во проверок по промышленной, пожарной безопасности и ООС</CardTitle>
             <div className="divide-y divide-gray-600 h-full flex flex-col justify-around">
@@ -282,6 +318,19 @@ const Home = () => {
               <Detail title="С начала года" value={state.data.incidents.year} />
             </div>
           </Card>
+          {['pnb', 'directions', 'control', 'train', 'meeting', 'auto', 'gazovoz'].map((card) => {
+            if (state.data[card]) {
+              return (<Card href={card}>
+                <CardTitle>{labels[card]}</CardTitle>
+                <div className="divide-y divide-gray-600">
+                  <Detail title="За прошедшую неделю" value={state.data[card].week} />
+                  <Detail title="С начала месяца" value={state.data[card].month} />
+                  <Detail title="С начала года" value={state.data[card].year} />
+                </div>
+              </Card>)
+            }
+            return null
+          })}
         </div>
         <Modal open={modal} close={() => setModal(false)}>
           <ModalTitle>Фильтрация по дате</ModalTitle>
@@ -306,12 +355,12 @@ const Home = () => {
             )}
           />
           <ModalActions>
-          <Button onClick={() => {
+            <Button onClick={() => {
               setDate({
                 from: moment().startOf('week').subtract(7, 'days').toDate(),
                 to: moment().endOf('week').subtract(7, 'days').toDate(),
               })
-          }}>Сброс</Button>
+            }}>Сброс</Button>
             <Button onClick={() => setModal(false)} >Закрыть</Button>
           </ModalActions>
         </Modal>

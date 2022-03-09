@@ -12,7 +12,7 @@ const startOfWeek = (date) => {
 const hasChild = ['accidents', 'failures'];
 
 const getData = async (req, res) => {
-    const list = ['security', 'accidents', 'work', 'failures', 'pollution', 'med', 'check', 'edu', 'incidents'];
+    const list = ['security', 'accidents', 'work', 'failures', 'pollution', 'med', 'check', 'edu', 'incidents', 'pnb', 'directions', 'control', 'train', 'meeting', 'auto', 'gazovoz'];
     const result = {};
     const yearStart = (new Date(req.query.from.split('-')[0], 0, 1)).toISOString().split('T')[0];
     const weekDateStart = startOfWeek(new Date(req.query.to));
