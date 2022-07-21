@@ -1,6 +1,6 @@
 const path = require('path');
 const mongoose = require('mongoose');
-const argon2 = require('argon2');
+const md5 = require('md5');
 require('dotenv').config({ path: path.resolve(process.cwd(), '.env') });
 const User = require('../server/models/user');
 
@@ -10,7 +10,7 @@ const main = async () => {
     console.log('Users exists');
     return;
   }
-  const password = await argon2.hash(process.env.DEFAULT_PASSWORD);
+  const password = md5(process.env.DEFAULT_PASSWORD);
   const user = new User({
     name: 'Админ',
     lastName: 'Админ',

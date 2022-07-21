@@ -1,9 +1,9 @@
-const argon2 = require('argon2');
+const md5 = require('md5');
 const User = require('../../models/user');
 const { sendError, errEnum } = require('../../errors');
 
 const register = async (req, res) => {
-  const hashedPassword = await argon2.hash(req.body.password);
+  const hashedPassword = await md5(req.body.password);
   const user = new User({
     ...req.validData,
     password: hashedPassword,

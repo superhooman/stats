@@ -1,7 +1,11 @@
-const argon2 = require('argon2');
+const md5 = require('md5');
 const User = require('../../models/user');
 const Session = require('../../models/session');
 const { sendError, errEnum } = require('../../errors');
+
+const verify = (str1, str2) => {
+  return md5(str1) === md5(str2);
+}
 
 const login = async (req, res) => {
   const user = await User.findOne({
@@ -10,7 +14,7 @@ const login = async (req, res) => {
   if (!user) {
     return sendError(req, res, errEnum.WRONG_AUTH);
   }
-  const valid = await argon2.verify(user.password, req.body.password);
+  const valid = verify(user.password, req.body.password);
   if (!valid) {
     return sendError(req, res, errEnum.WRONG_AUTH);
   }
