@@ -8,11 +8,7 @@ const {
 const App = require('./server/app');
 const mongoose = require('mongoose');
 const Redis = require('ioredis');
-const connectRedis = require('connect-redis');
 const session = require('express-session');
-
-const RedisStore = connectRedis(session);
-const redisClient = new Redis(REDIS_URL);
 
 const UserController = require('./server/controllers/user');
 const DataController = require('./server/controllers/data');
@@ -26,10 +22,6 @@ const app = new App({
   middleWares: [
     session({
       name: COOKIE_NAME,
-      store: new RedisStore({
-        client: redisClient,
-        disableTouch: true,
-      }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 8,
         httpOnly: true,

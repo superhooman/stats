@@ -3,8 +3,8 @@ const User = require('../../models/user');
 const Session = require('../../models/session');
 const { sendError, errEnum } = require('../../errors');
 
-const verify = (str1, str2) => {
-  return md5(str1) === md5(str2);
+const verify = (str2, str1) => {
+  return md5(str1) === str2;
 }
 
 const login = async (req, res) => {
